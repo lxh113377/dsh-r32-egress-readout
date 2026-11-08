@@ -1,0 +1,20 @@
+name: r32-edge-egress-readout
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  readout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: read and judge
+        env:
+          PROBE_URL: ${{ vars.PROBE_URL }}
+        run: |
+          node verdict.mjs
+          node read.mjs
+          node verdict.mjs --judge readout.txt
+          cat readout.txt
